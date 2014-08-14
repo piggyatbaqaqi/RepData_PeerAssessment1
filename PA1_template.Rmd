@@ -1,9 +1,28 @@
 # Reproducible Research: Peer Assessment 1
 
+This is the work of La Monte H.P. Yarroll <piggy+coursera@google.com>.
+
+
+```{r}
+figure.dir <- "figures"
+raw.data.archive <- "activity.zip"
+raw.data.csv <- "activity.csv"
+as.time <- function (d, t) {
+    strptime(as.character(d), "%Y-%m-%d") + (t %/% 100) * 3600 + (t %% 100) * 60
+}
+```
 
 ## Loading and preprocessing the data
+```{r}
+if (!file.exists(raw.data.csv)) {
+   unzip(raw.data.archive)
+}
+steps.data <- read.csv(raw.data.csv)
+steps.data$when <- as.time(steps.data$date, steps.data$interval)
+steps.data$date <- as.Date(as.character(steps.data$date))
 
-
+summary(steps.data)
+```
 
 ## What is mean total number of steps taken per day?
 
