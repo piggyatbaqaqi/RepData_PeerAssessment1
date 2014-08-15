@@ -30,7 +30,6 @@ summary(steps.data)
 
 ```{r}
 total.steps.by.day <- tapply(steps.data$steps, steps.data$date, sum, na.rm=TRUE, simplify=TRUE)
-str(total.steps.by.day)
 hist(total.steps.by.day,20)
 ```
 
@@ -45,10 +44,17 @@ median(total.steps.by.day)
 1. Make a time series plot (i.e. `type = "l"`) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
 ```{r}
+mean.steps.by.interval <- tapply(steps.data$steps, steps.data$interval, mean, na.rm=TRUE, simplify=TRUE)
+str(mean.steps.by.interval)
+intervals <- as.time(rep("2012-10-01", length(mean.steps.by.interval)), as.numeric(names(mean.steps.by.interval)))
+plot(intervals, mean.steps.by.interval, type="l")
 ```
-2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
+2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 ```{r}
+max.interval <- intervals[mean.steps.by.interval == max(mean.steps.by.interval)]
+max.interval <- as.POSIXlt(max.interval)
+sprintf("%02d:%02d", max.interval$hour, max.interval$min)
 ```
 ## Imputing missing values
 
