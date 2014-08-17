@@ -2,7 +2,6 @@
 
 This is the work of La Monte H.P. Yarroll <piggy+coursera@google.com>.
 
-
 ```{r}
 figure.dir <- "figures"
 raw.data.archive <- "activity.zip"
@@ -61,19 +60,45 @@ sprintf("%02d:%02d", max.interval$hour, max.interval$min)
 1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with `NA`s)
 
 ```{r}
+sum(!complete.cases(steps.data))
 ```
+
 2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
 
+There are 8 whole days with every entry having the value NA:
 ```{r}
+mean.steps.by.day <- tapply(steps.data$steps, steps.data$date, mean, na.rm=TRUE, simplify=TRUE)
+sum(is.nan(mean.steps.by.day))
 ```
+We need a different method to impute missing data.
+
+We set steps to the mean for the respective interval for every NA in steps.
+```{r}
+tmp <- data.frame(interval=as.integer(names(mean.steps.by.interval)), mean.steps=mean.steps.by.interval)
+imputed.steps.data <- merge(steps.data, tmp, by="interval")
+```
+
 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
 
 ```{r}
+missing <- is.na(imputed.steps.data$steps)
+imputed.steps.data$steps[missing] <- imputed.steps.data$mean.steps[missing]
 ```
+
 4. Make a histogram of the total number of steps taken each day and Calculate and report the **mean** and **median** total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
 ```{r}
+imputed.total.steps.by.day <- tapply(imputed.steps.data$steps, imputed.steps.data$date, sum, na.rm=TRUE, simplify=TRUE)
+hist(imputed.total.steps.by.day,20)
+mean(imputed.total.steps.by.day)
+median(imputed.total.steps.by.day)
+mean(total.steps.by.day)
+median(total.steps.by.day)
 ```
+
+Imputing missing values by this method amplified a single value to the
+point that it became the mean and the median. It almost completely eliminated
+the days with 0 steps.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
