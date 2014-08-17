@@ -216,16 +216,15 @@ par(mfrow = c(2,1))
 plot(mean.steps.by.interval.weekpart$interval,
      mean.steps.by.interval.weekpart$weekend,
      type="l",
-     main="Weekend steps by time of day",
-     xlab="time", ylab="mean steps")
+     main="Steps in 5 minutes by time of day",
+     xlab="time", ylab="weekend mean steps")
 plot(mean.steps.by.interval.weekpart$interval,
      mean.steps.by.interval.weekpart$weekday,
      type="l",
-     main="Weekday steps by time of day",
-     xlab="time", ylab="mean steps")
+     xlab="time", ylab="weekday mean steps")
 ```
 
 ![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13.png) 
 
 On the weekend, activity starts later but is much higher in the
-afternoons and c ontinues later into the evening.
+afternoons and continues later into the evening.
