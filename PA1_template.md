@@ -4,7 +4,6 @@ This is the work of La Monte H.P. Yarroll <piggy+coursera@google.com>.
 
 
 ```r
-figure.dir <- "figures"
 raw.data.archive <- "activity.zip"
 raw.data.csv <- "activity.csv"
 as.time <- function (d, t) {
