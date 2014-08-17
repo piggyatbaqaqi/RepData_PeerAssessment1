@@ -34,7 +34,7 @@ str(steps.data)
 
 ## What is mean total number of steps taken per day?
 
-1. Make a histogram of the total number of steps taken each day
+### Make a histogram of the total number of steps taken each day.
 
 
 ```r
@@ -64,7 +64,7 @@ median(total.steps.by.day)
 ```
 ## What is the average daily activity pattern?
 
-1. Make a time series plot (i.e. `type = "l"`) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
+### Make a time series plot (i.e. `type = "l"`) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis).
 
 
 ```r
@@ -75,7 +75,7 @@ plot(intervals, mean.steps.by.interval, type="l")
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
 
-2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+### Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
 ```r
 max.interval <- intervals[mean.steps.by.interval == max(mean.steps.by.interval)]
@@ -88,7 +88,7 @@ sprintf("%02d:%02d", max.interval$hour, max.interval$min)
 ```
 ## Imputing missing values
 
-1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with `NA`s)
+### Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with `NA`s).
 
 
 ```r
@@ -99,7 +99,7 @@ sum(!complete.cases(steps.data))
 ## [1] 2304
 ```
 
-2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
+### Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
 
 There are 8 whole days with every entry having the value NA:
 
@@ -120,7 +120,7 @@ tmp <- data.frame(interval=as.integer(names(mean.steps.by.interval)), mean.steps
 imputed.steps.data <- merge(steps.data, tmp, by="interval")
 ```
 
-3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
+### Create a new dataset that is equal to the original dataset but with the missing data filled in.
 
 
 ```r
@@ -128,7 +128,7 @@ missing <- is.na(imputed.steps.data$steps)
 imputed.steps.data$steps[missing] <- imputed.steps.data$mean.steps[missing]
 ```
 
-4. Make a histogram of the total number of steps taken each day and Calculate and report the **mean** and **median** total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+### Make a histogram of the total number of steps taken each day and Calculate and report the **mean** and **median** total number of steps taken per day.
 
 
 ```r
@@ -170,13 +170,15 @@ median(total.steps.by.day)
 ## [1] 10395
 ```
 
+### Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+
 Imputing missing values by this method amplified a single value to the
 point that it became the mean and the median. It almost completely eliminated
 the days with 0 steps.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-1. Create a new factor variable in the dataset with two levels -- "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
+### Create a new factor variable in the dataset with two levels -- "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
 
 
 ```r
@@ -186,7 +188,7 @@ steps.data$weekpart[weekends] <- "weekend"
 steps.data$weekpart[!weekends] <- "weekday"
 steps.data$weekpart <- as.factor(steps.data$weekpart)
 ```
-1. Make a panel plot containing a time series plot (i.e. `type = "l"`) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
+### Make a panel plot containing a time series plot (i.e. `type = "l"`) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
 
 
 ```r
