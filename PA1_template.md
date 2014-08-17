@@ -16,7 +16,7 @@ as.time <- function (d, t) {
 
 ```r
 if (!file.exists(raw.data.csv)) {
-   unzip(raw.data.archive)
+    unzip(raw.data.archive)
 }
 steps.data <- read.csv(raw.data.csv)
 steps.data$when <- as.time(steps.data$date, steps.data$interval)
@@ -38,13 +38,14 @@ str(steps.data)
 
 
 ```r
-total.steps.by.day <- tapply(steps.data$steps, steps.data$date, sum, na.rm=TRUE, simplify=TRUE)
-hist(total.steps.by.day,20)
+total.steps.by.day <- tapply(steps.data$steps, steps.data$date,
+                             sum, na.rm=TRUE, simplify=TRUE)
+hist(total.steps.by.day, 20, xlab="Mean total steps per day")
 ```
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
 
-2. Calculate and report the **mean** and **median** total number of steps taken per day
+### Calculate and report the **mean** and **median** total number of steps taken per day
 
 
 ```r
@@ -68,9 +69,17 @@ median(total.steps.by.day)
 
 
 ```r
-mean.steps.by.interval <- tapply(steps.data$steps, steps.data$interval, mean, na.rm=TRUE, simplify=TRUE)
-intervals <- as.time(rep("2012-10-01", length(mean.steps.by.interval)), as.numeric(names(mean.steps.by.interval)))
-plot(intervals, mean.steps.by.interval, type="l")
+intervals.as.time <- function(intervals) {
+    as.time(rep("2012-10-01", length(intervals)),
+            as.numeric(intervals))
+}
+mean.steps.by.interval <- tapply(steps.data$steps,
+                                 steps.data$interval,
+                                 mean, na.rm=TRUE, simplify=TRUE)
+intervals <- intervals.as.time(names(mean.steps.by.interval))
+plot(intervals, mean.steps.by.interval, type="l",
+     main="Mean steps in 5 minutes over all days",
+     xlab="time", ylab="mean steps")
 ```
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
@@ -78,7 +87,8 @@ plot(intervals, mean.steps.by.interval, type="l")
 ### Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
 ```r
-max.interval <- intervals[mean.steps.by.interval == max(mean.steps.by.interval)]
+max.interval <- intervals[mean.steps.by.interval ==
+                          max(mean.steps.by.interval)]
 max.interval <- as.POSIXlt(max.interval)
 sprintf("%02d:%02d", max.interval$hour, max.interval$min)
 ```
@@ -104,7 +114,8 @@ sum(!complete.cases(steps.data))
 There are 8 whole days with every entry having the value NA:
 
 ```r
-mean.steps.by.day <- tapply(steps.data$steps, steps.data$date, mean, na.rm=TRUE, simplify=TRUE)
+mean.steps.by.day <- tapply(steps.data$steps, steps.data$date,
+                            mean, na.rm=TRUE, simplify=TRUE)
 sum(is.nan(mean.steps.by.day))
 ```
 
@@ -116,7 +127,8 @@ We need a different method to impute missing data.
 We set steps to the mean for the respective interval for every NA in steps.
 
 ```r
-tmp <- data.frame(interval=as.integer(names(mean.steps.by.interval)), mean.steps=mean.steps.by.interval)
+tmp <- data.frame(interval=as.integer(names(mean.steps.by.interval)),
+                  mean.steps=mean.steps.by.interval)
 imputed.steps.data <- merge(steps.data, tmp, by="interval")
 ```
 
@@ -132,7 +144,9 @@ imputed.steps.data$steps[missing] <- imputed.steps.data$mean.steps[missing]
 
 
 ```r
-imputed.total.steps.by.day <- tapply(imputed.steps.data$steps, imputed.steps.data$date, sum, na.rm=TRUE, simplify=TRUE)
+imputed.total.steps.by.day <- tapply(imputed.steps.data$steps,
+                                     imputed.steps.data$date,
+                                     sum, na.rm=TRUE, simplify=TRUE)
 hist(imputed.total.steps.by.day,20)
 ```
 
@@ -192,14 +206,23 @@ steps.data$weekpart <- as.factor(steps.data$weekpart)
 
 
 ```r
-tmp <- tapply(steps.data$steps, list(steps.data$interval, steps.data$weekpart), mean, na.rm=TRUE, simplify=TRUE)
+tmp <- tapply(steps.data$steps,
+              list(steps.data$interval, steps.data$weekpart),
+              mean, na.rm=TRUE, simplify=TRUE)
 mean.steps.by.interval.weekpart <- as.data.frame(tmp)
-interval.numbers <- as.numeric(attr(tmp, "dimnames")[[1]])
-interval <- as.time(rep("2012-10-01", length(interval.numbers)), interval.numbers)
+interval <- intervals.as.time(attr(tmp, "dimnames")[[1]])
 mean.steps.by.interval.weekpart$interval <- interval
 par(mfrow = c(2,1))
-plot(mean.steps.by.interval.weekpart$interval, mean.steps.by.interval.weekpart$weekend, type="l", main="Weekend steps by time of day", xlab="time", ylab="mean steps")
-plot(mean.steps.by.interval.weekpart$interval, mean.steps.by.interval.weekpart$weekday, type="l", main="Weekday steps by time of day", xlab="time", ylab="mean steps")
+plot(mean.steps.by.interval.weekpart$interval,
+     mean.steps.by.interval.weekpart$weekend,
+     type="l",
+     main="Weekend steps by time of day",
+     xlab="time", ylab="mean steps")
+plot(mean.steps.by.interval.weekpart$interval,
+     mean.steps.by.interval.weekpart$weekday,
+     type="l",
+     main="Weekday steps by time of day",
+     xlab="time", ylab="mean steps")
 ```
 
 ![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13.png) 
